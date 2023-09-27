@@ -1,8 +1,27 @@
-var express = require('express');
-var app = express();
-app.get('/', function(req, res) {
-  res.send('Hello World');
-})
-var server = app.listen(4200, function() {
-  console.log("Backend Application listening at http://localhost:4200")
-})
+const express = require("express");
+const cors = require("cors");
+
+const app = express();
+
+var corsOptions = {
+  origin: "http://localhost:4200"
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Coucou" });
+});
+
+// set port, listen for requests
+const PORT = process.env.PORT || 4200;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+});
