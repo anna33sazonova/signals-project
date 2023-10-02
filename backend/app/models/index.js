@@ -19,6 +19,11 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
+db.user = require("../models/user.models.js")(sequelize, Sequelize);
+
+// todo to check relation
+db.user.belongsTo({
+  foreignKey: "userId"
+})
 
 module.exports = db;
