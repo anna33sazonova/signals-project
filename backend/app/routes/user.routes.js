@@ -1,4 +1,4 @@
-const {authJwt} = require("../middleware");
+const {authJwt} = require("../middleware/");
 const controller = require("../controllers/user.controller")
 
 module.exports = function(app){
@@ -9,6 +9,5 @@ module.exports = function(app){
 
   app.get("/api/test/all", controller.allAccess);
 
-  //todo change userBoard to info
-  app.get("api/test/info", [authJwt.verifyToken], controller.userBoard);
+  app.get("api/test/info", [authJwt.verifyToken], controller.userInfo);
 }
