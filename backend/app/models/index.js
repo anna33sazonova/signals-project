@@ -1,6 +1,6 @@
 const dbConfig = require("../config/db.config.js");
 
-const Sequelize = require("sequelize");
+var Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -21,9 +21,9 @@ db.sequelize = sequelize;
 
 db.user = require("../models/user.models.js")(sequelize, Sequelize);
 
-// todo to check relation
-db.user.belongsTo({
-  foreignKey: "userId"
-})
+// no relation
+// db.user.hasOne({
+//  key: "userId"
+// })
 
 module.exports = db;

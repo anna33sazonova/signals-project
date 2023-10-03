@@ -1,21 +1,30 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const cookieSession = require("cookie-session");
 
 const app = express();
 
-var corsOptions = {
+const corsOptions = {
   origin: "http://localhost:4200"
 };
 
 app.use(cors(
     corsOptions));
 
-// parse request of content type - application / json
+// parse request of content type - application/json
 app.use(bodyParser.json());
 
 // parse request of content type - application/x-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(
+    cookieSession({
+name:"signals-cookie",
+      keys: ["COOKIE_SECRET"],
+      httpOnly: true,
+    })
+);
 
 // database
 const db = require("./app/models");
