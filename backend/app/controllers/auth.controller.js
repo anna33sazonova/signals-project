@@ -15,6 +15,9 @@ try {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
   });
+  return res.status(200).send({
+    message: "Your registration is successful"
+  });
 }
   catch(err) {
     res.status(500).send({message: err.message});
