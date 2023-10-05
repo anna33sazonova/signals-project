@@ -6,11 +6,9 @@ const cookieSession = require("cookie-session");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:8080"
-};
+  origin: "http://localhost:4200"};
 
-app.use(cors(
-    corsOptions));
+app.use(cors(corsOptions));
 
 // parse request of content type - application/json
 app.use(bodyParser.json());
@@ -26,6 +24,22 @@ name:"signals-cookie",
     })
 );
 
+  app.use(function(req, res, next){
+    res.setHeader(
+        "Access-Control-Allow-Origin",
+        '*'
+    );
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "x-access-token, Origin, Content-Type, Accept"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, PATCH"
+    );
+    next();
+  });
+
 // database
 const db = require("./app/models");
 
@@ -38,19 +52,20 @@ db.sequelize.sync({force: true})
   console.log("Failed to sync db: " + err.message);
 });
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({message: "Coucou"});
-});
 
 //routes
-require('./app/routes/user.routes')(app);
-require('./app/routes/auth.routes')(app);
+const userRoute = require('./app/routes/user.routes');
+const authRoute = require('./app/routes/auth.routes');
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+app.use('/api/test', userRoute);
+app.use('/api/auth', authRoute);
+
+module.exports = app;
 
 // function initial() ?
