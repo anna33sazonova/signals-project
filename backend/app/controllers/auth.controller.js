@@ -10,11 +10,15 @@ const bcrypt = require("bcryptjs");
 exports.singup = async (req, res) => {
   //Save user to database
 try {
+  console.log('signup');
+  const salt = await bcrypt.genSaltSync(8);
+  const password = await req.body.password;
   const user = await  User.create({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hash(password, salt)
   });
+  console.log(user);
   return res.status(200).send({
     message: "Your registration is successful"
   });
