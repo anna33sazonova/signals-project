@@ -9,7 +9,7 @@ verifyToken = (req, res, next) => {
       message: "No token provided!"
     });
   }
-
+// verify - pour decoder le token
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({

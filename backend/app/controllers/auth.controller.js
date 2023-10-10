@@ -71,13 +71,13 @@ User.findOne({
 exports.singup = async (req, res) => {
   //Save user to database
 try {
-  const salt = bcrypt.genSaltSync(8);
-  const password = req.body.password;
+ // const salt = bcrypt.genSaltSync(8);
+ // const password = req.body.password;
   await  User.create({
     username: req.body.username,
     email: req.body.email,
     // hash OR hashSync bcrypt.hash(req.body.password, salt)
-    // password: bcrypt.hash(password, salt)
+   //  password: bcrypt.hash(password, salt),
     password:  req.body.password
   });
   return res.status(200).send({
@@ -134,6 +134,7 @@ exports.singin = async (req, res) => {
 
     return res.status(200).json({
       id: user.id,
+      user: user,
       message: 'Login success',
       token: jwt.sign(
           {id: user.id}, config.secret
