@@ -13,15 +13,15 @@ const router = app.Router();
 //   });
 // };
   router.post(
-      "/signup",
+      '/signup',
       [
         verifySignUp.checkDuplicateUserNameOrEmail
       ],
       controller.singup
   );
 
-  router.post("/signup", controller.singin);
+  router.post('/signin', controller.singin);
 
-  router.post("/signout", controller.signout);
+  router.post('/signout', controller.signout);
 
 module.exports = router;
