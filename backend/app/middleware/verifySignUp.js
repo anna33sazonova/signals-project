@@ -11,6 +11,7 @@ checkDuplicateUserNameOrEmail = async (req, res, next) => {
     });
 
     if (user) {
+      // 400 ? changer le mode de gestion d'erreurs
       return res.status(400).send({
         message: "Failed! Username is already in use!"
       });
