@@ -70,25 +70,26 @@ User.findOne({
 
 exports.singup = async (req, res) => {
   //Save user to database
-try {
- // const salt = bcrypt.genSaltSync(8);
- // const password = req.body.password;
-  await  User.create({
-    username: req.body.username,
-    email: req.body.email,
-    // hash OR hashSync bcrypt.hash(req.body.password, salt)
-   //  password: bcrypt.hash(password, salt),
-    password:  req.body.password
-  });
-  return res.status(200).send({
-    message: "Your registration is successful"
-  });
-}
-  catch(err) {
+  try {
+    // const salt = bcrypt.genSaltSync(8);
+    // const password = req.body.password;
+    console.log(req.body);
+    await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      // hash OR hashSync bcrypt.hash(req.body.password, salt)
+      password: bcrypt.hashSync(req.body.password, 8),
+      // password:  req.body.password
+    });
+    return res.status(200).send({
+      message: "Your registration is successful"
+    });
+  } catch (err) {
+    console.log(err);
     res.status(500).send({message: err.message});
+
   }
 };
-
 
 // exports.signup = async (req, res) => {
 //   const salt = await bcrypt.genSaltSync(8);
@@ -108,7 +109,6 @@ try {
 //   }
 // }
 
-
 exports.singin = async (req, res) => {
   try {
     const user = await User.findOne({
@@ -117,35 +117,40 @@ exports.singin = async (req, res) => {
       }
     });
     console.log(user);
-    console.log(req.body);
     if (!user) {
       return res.status(404).send({message: "User not found"});
     }
-   // const passwordIsValid = bcrypt.compareSync(
-    //    req.body.password,
-    //    user.password
-  //  );
-  //   if (req.body.password !== user.password) {
-  //     return res.status(401).send({
-  //       accessToken: null,
-  //       message: "Invalid Password!"
-  //     });
-  //   }
+    const passwordIsValid = bcrypt.compareSync(
+        req.body.password,
+        user.password
+    );
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid Password!"
+      });
+    }
+
+    const token = jwt.sign({id: user.id},
+        config.secret,
+        {
+          algorithm: 'HS256',
+          allowInsecureKeySizes: true,
+          expiresIn: 86400, // 24 hours
+        });
+
+    req.session.token = token;
 
     return res.status(200).json({
       id: user.id,
-      user: user,
+      username: user.username,
+      email: user.email,
       message: 'Login success',
-      token: jwt.sign(
-          {id: user.id}, config.secret
-      )
     });
   } catch (err) {
     res.status(500).send({message: err.message});
   }
 };
-
-
 
 exports.signout = async (req, res) => {
   try {
